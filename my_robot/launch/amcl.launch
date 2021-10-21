@@ -9,21 +9,42 @@
 
   <!-- AMCL Node -->
   <node name="amcl" pkg="amcl" type="amcl" output="screen">
-   <remap from="scan" to="my_robot/laser/scan"/>
-   
-   <param name="odom_frame_id" value="odom"/>
-   <param name="odom_model_type" value="diff-corrected"/>
+
    <param name="base_frame_id" value="robot_footprint"/>
    <param name="global_frame_id" value="map"/>
+   
+   <!--Initial position-->
+   <param name="initial_pose_x" value="4"/>
+   <param name="initial_pose_y" value="0"/>
+   <param name="initial_pose_a" value="-1.5707"/>
+
+   <!-- Laser -->
+   <param name="laser_model_type" value="likelihood_field"/>
+   
+   <!-- Odom Parameters -->
+   <param name="odom_frame_id" value="odom"/>
+   <param name="odom_model_type" value="diff-corrected"/>
+   <param name="odom_alpha1" value="0.005"/>
+   <param name="odom_alpha2" value="0.005"/>
+   <param name="odom_alpha3" value="0.005"/>
+   <param name="odom_alpha4" value="0.005"/>
+
+   <!-- Overall Filter-->
+   <param name="min_particles" value="100"/>
+   <param name="max_particles" value="300"/>
+   <param name="update_min_d" value="0.15"/>
+   <param name="update_min_a" value="0.3"/>
+   <param name="resample_interval" value="1"/>
+   
   </node>
 
 
   <!-- Move Base -->
   <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
-   <remap from="scan" to="my_robot/laser/scan"/>
    
    <param name="base_global_planner" value="navfn/NavfnROS" />
    <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+   <param name="transform_tolerance" value="0.5"/>
    
    <rosparam file="$(find my_robot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
    <rosparam file="$(find my_robot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
